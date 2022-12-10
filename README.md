@@ -11,6 +11,8 @@ curl localhost:8008/books --include --header "Content-Type: application/json" -d
 -d => data  
 @  => file  and the specify the request type  
 
+gin.H => type H map[string]interface{}. You can index it just like a map.  
+
 
 gin-gonic is used for the api.  
 No explicit db is used (yet)  
