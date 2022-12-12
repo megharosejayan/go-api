@@ -11,6 +11,9 @@ curl localhost:8008/books --include --header "Content-Type: application/json" -d
 -d => data  
 @  => file  and the specify the request type  
 
+Curl command for PATCH request (query parameter)  
+>curl localhost:8080/checkout?id=2 --request "PATCH"
+
 gin.H => type H map[string]interface{}. You can index it just like a map.  
 
 
