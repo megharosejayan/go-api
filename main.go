@@ -25,7 +25,7 @@ func getBooks(c *gin.Context) {
 
 }
 
-func bookByID(c *gin.Context) {
+func bookById(c *gin.Context) {
 	id := c.Param("id")
 	book, err := getBookById(id)
 
@@ -34,6 +34,30 @@ func bookByID(c *gin.Context) {
 		return
 	}
 
+	c.IndentedJSON(http.StatusOK, book)
+}
+
+func checkoutBook(c *gin.Context) { //query param
+	id, ok := c.GetQuery("id")
+
+	if !ok {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "missing"})
+		return
+	}
+
+	book, err := getBookById(id)
+
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Book not found"})
+		return
+	}
+
+	if book.Quantity <= 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Book not available"})
+		return
+	}
+
+	book.Quantity -= 1
 	c.IndentedJSON(http.StatusOK, book)
 }
 
@@ -62,7 +86,8 @@ func createBook(c *gin.Context) {
 func main() {
 	router := gin.Default() //to handle different routes
 	router.GET("/books", getBooks)
-	router.GET("/books/:id", bookByID) //setting a path parameter in golang :__
+	router.GET("/books/:id", bookById) //setting a path parameter in golang :__
 	router.POST("/books", createBook)
+	router.PATCH("/checkout", checkoutBook)
 	router.Run("localhost:8080")
 }
